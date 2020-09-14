@@ -3,3 +3,6 @@
 ################################################################################
 
 /src/medusa/obj/Debug
+/src/.vs/medusa/v16/Server/sqlite3
+/src/.vs/medusa/v16
+/src/medusa/bin/Debug
