@@ -9,11 +9,19 @@ namespace medusa
     public partial class MedusaMain : Form
     {
         private Bitmap Canvas { get; set; }
-        private bool isStop = false;
+        private int MarkPosX { get; set; }
+        private int MarkPosY { get; set; }
+        private int MarkWidth { get; } = 50;
+        private int MarkHeight { get; } = 50;
+        private bool IsStop { get; set; } = false;
+
+        private readonly object _locked = new object();
+        private FormWindowState _currentWindowState;
 
         public MedusaMain()
         {
             InitializeComponent();
+            _currentWindowState = WindowState;
             Canvas = new Bitmap(pictureBox.Width, pictureBox.Height);
             DrawBackGround();
             StopTrainingMenu.Enabled = false;
@@ -23,28 +31,13 @@ namespace medusa
         {
             StartTrainingMenu.Enabled = false;
             StopTrainingMenu.Enabled = true;
-
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    DrawBackGround();
-                    Thread.Sleep(50);
-                    DrawMark();
-                    Thread.Sleep(500);
-
-                    if (isStop)
-                    {
-                        isStop = false;
-                        break;
-                    }
-                }
-            });
+            IsStop = false;
+            DoTraining();
         }
 
         private void StopTrainingMenu_Click(object sender, EventArgs e)
         {
-            isStop = true;
+            IsStop = true;
             StartTrainingMenu.Enabled = true;
             StopTrainingMenu.Enabled = false;
         }
@@ -52,6 +45,36 @@ namespace medusa
         private void ExitAppMenu_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void DoTraining()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    lock (_locked)
+                    {
+                        DrawBackGround();
+                    }
+
+                    lock (_locked)
+                    {
+                        DecideMarkPos();
+                        DrawMark();
+                    }
+
+                    lock (_locked)
+                    {
+                        Thread.Sleep(500);
+                    }
+
+                    if (IsStop)
+                    {
+                        break;
+                    }
+                }
+            });
         }
 
         private void DrawBackGround()
@@ -63,19 +86,47 @@ namespace medusa
             pictureBox.Image = Canvas;
         }
 
-        private void DrawMark()
+        private void DecideMarkPos()
         {
-            var markWidth = 50;
-            var markHeight = 50;
             Random r = new Random();
-            var markPosX = r.Next(0, Canvas.Width - markWidth);
-            var markPosY = r.Next(0, Canvas.Height - markHeight);
-            
+            MarkPosX = r.Next(0, Canvas.Width - MarkWidth);
+            MarkPosY = r.Next(0, Canvas.Height - MarkHeight);
+        }
+
+        private void DrawMark()
+        {            
             using (Graphics g = Graphics.FromImage(Canvas))
             {
-                g.FillEllipse(Brushes.Yellow, markPosX, markPosY, markWidth, markHeight);
+                g.FillEllipse(Brushes.Yellow, MarkPosX, MarkPosY, MarkWidth, MarkHeight);
             }
             pictureBox.Image = Canvas;
+        }
+
+        private void FormResized(object sender, EventArgs e)
+        {
+            //Re-draw Canvas only when WindowsState(Normal/Maximized/Minimized) was changed
+            //in order to avoid heavy processing due to many FormResized() callings.
+            //For transition Normal to Normal, Re-draw processing will be done in FormResizeEnd().
+            if (WindowState == _currentWindowState) return;
+             _currentWindowState = WindowState;
+
+            if (_currentWindowState == FormWindowState.Minimized) return;
+            FormResizeEnd(sender, e);
+        }
+
+        private void FormResizeEnd(object sender, EventArgs e)
+        {
+            lock (_locked)
+            {
+                Canvas.Dispose();
+                Canvas = new Bitmap(pictureBox.Width, pictureBox.Height);
+
+                //In case of no training, only background will be drown.
+                if (StartTrainingMenu.Enabled)
+                {
+                    DrawBackGround();
+                }
+            }
         }
     }
 }
