@@ -8,23 +8,26 @@ namespace medusa
 {
     public partial class MedusaMain : Form
     {
-        private Bitmap Canvas { get; set; }
         private int MarkPosX { get; set; }
         private int MarkPosY { get; set; }
         private bool IsStop { get; set; } = false;
 
-        private readonly object _locked = new object();
         private FormWindowState _currentWindowState;
+        private static object _locker = new object();
 
         public MedusaMain()
         {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterScreen;
-
             _currentWindowState = WindowState;
-            Canvas = new Bitmap(pictureBox.Width, pictureBox.Height);
-            DrawBackGround();
             StopTrainingMenu.Enabled = false;
+
+            var canvas = new Bitmap(TrainingPictureBox.Width, TrainingPictureBox.Height);
+            using (var g = Graphics.FromImage(canvas))
+            {
+                DrawBackGround(g);
+            }
+            TrainingPictureBox.Image = canvas;
         }
        
         private void StartTrainingMenu_Click(object sender, EventArgs e)
@@ -53,21 +56,21 @@ namespace medusa
             {
                 while (true)
                 {
-                    lock (_locked)
+                    lock (_locker)
                     {
-                        DrawBackGround();
+                        var canvas = new Bitmap(TrainingPictureBox.Width, TrainingPictureBox.Height);
+                        using (var g = Graphics.FromImage(canvas))
+                        {
+                            DrawBackGround(g);
+                            DecideMarkPos();
+                            DrawMark(g);
+                        }
+
+                        TrainingPictureBox.Image.Dispose();
+                        TrainingPictureBox.Image = canvas;
                     }
 
-                    lock (_locked)
-                    {
-                        DecideMarkPos();
-                        DrawMark();
-                    }
-
-                    lock (_locked)
-                    {
-                        Thread.Sleep(GetMarkerSpeedByMilliSecond());
-                    }
+                    Thread.Sleep(GetMarkerSpeedByMilliSecond());
 
                     if (IsStop)
                     {
@@ -77,39 +80,31 @@ namespace medusa
             });
         }
 
-        private void DrawBackGround()
+        private void DrawBackGround(Graphics g)
         {
-            using (Graphics g = Graphics.FromImage(Canvas))
+            using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.BackgroundColorR,
+                Properties.Settings.Default.BackgroundColorG, Properties.Settings.Default.BackgroundColorB)))
             {
-                using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.BackgroundColorR,
-                    Properties.Settings.Default.BackgroundColorG, Properties.Settings.Default.BackgroundColorB)))
-                {
-                    g.FillRectangle(brush, 0, 0, pictureBox.Width, pictureBox.Height);
-                }
+                g.FillRectangle(brush, 0, 0, TrainingPictureBox.Width, TrainingPictureBox.Height);
             }
-            pictureBox.Image = Canvas;
         }
 
         private void DecideMarkPos()
         {
             var markerSize = GetMarkerSize();
             Random r = new Random();
-            MarkPosX = r.Next(0, Canvas.Width - markerSize);
-            MarkPosY = r.Next(0, Canvas.Height - markerSize);
+            MarkPosX = r.Next(0, TrainingPictureBox.Width- markerSize);
+            MarkPosY = r.Next(0, TrainingPictureBox.Height - markerSize);
         }
 
-        private void DrawMark()
-        {            
-            using (Graphics g = Graphics.FromImage(Canvas))
+        private void DrawMark(Graphics g)
+        {
+            var markerSize = GetMarkerSize();
+            using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.MarkerColorR,
+                Properties.Settings.Default.MarkerColorG, Properties.Settings.Default.MarkerColorB)))
             {
-                var markerSize = GetMarkerSize();
-                using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.MarkerColorR,
-                    Properties.Settings.Default.MarkerColorG, Properties.Settings.Default.MarkerColorB)))
-                {
-                    g.FillEllipse(brush, MarkPosX, MarkPosY, markerSize, markerSize);
-                }
+                g.FillEllipse(brush, MarkPosX, MarkPosY, markerSize, markerSize);
             }
-            pictureBox.Image = Canvas;
         }
 
         private void FormResized(object sender, EventArgs e)
@@ -126,15 +121,19 @@ namespace medusa
 
         private void FormResizeEnd(object sender, EventArgs e)
         {
-            lock (_locked)
+            //In case of no training, only background will be drown.
+            if (StartTrainingMenu.Enabled)
             {
-                Canvas.Dispose();
-                Canvas = new Bitmap(pictureBox.Width, pictureBox.Height);
-
-                //In case of no training, only background will be drown.
-                if (StartTrainingMenu.Enabled)
+                lock (_locker)
                 {
-                    DrawBackGround();
+                    var canvas = new Bitmap(TrainingPictureBox.Width, TrainingPictureBox.Height);
+                    using (var g = Graphics.FromImage(canvas))
+                    {
+                        DrawBackGround(g);
+                    }
+
+                    TrainingPictureBox.Image.Dispose();
+                    TrainingPictureBox.Image = canvas;
                 }
             }
         }

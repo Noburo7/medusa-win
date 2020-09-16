@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MedusaMain));
-            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.TrainingPictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.medusaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StartTrainingMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,19 +37,19 @@
             this.ExitAppMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.設定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TrainingSettingMenu = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TrainingPictureBox)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pictureBox
+            // TrainingPictureBox
             // 
-            this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox.Location = new System.Drawing.Point(0, 24);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(715, 493);
-            this.pictureBox.TabIndex = 0;
-            this.pictureBox.TabStop = false;
+            this.TrainingPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TrainingPictureBox.Location = new System.Drawing.Point(0, 24);
+            this.TrainingPictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TrainingPictureBox.Name = "TrainingPictureBox";
+            this.TrainingPictureBox.Size = new System.Drawing.Size(715, 493);
+            this.TrainingPictureBox.TabIndex = 0;
+            this.TrainingPictureBox.TabStop = false;
             // 
             // menuStrip
             // 
@@ -75,21 +75,21 @@
             // StartTrainingMenu
             // 
             this.StartTrainingMenu.Name = "StartTrainingMenu";
-            this.StartTrainingMenu.Size = new System.Drawing.Size(180, 22);
+            this.StartTrainingMenu.Size = new System.Drawing.Size(150, 22);
             this.StartTrainingMenu.Text = "トレーニング開始";
             this.StartTrainingMenu.Click += new System.EventHandler(this.StartTrainingMenu_Click);
             // 
             // StopTrainingMenu
             // 
             this.StopTrainingMenu.Name = "StopTrainingMenu";
-            this.StopTrainingMenu.Size = new System.Drawing.Size(180, 22);
+            this.StopTrainingMenu.Size = new System.Drawing.Size(150, 22);
             this.StopTrainingMenu.Text = "トレーニング終了";
             this.StopTrainingMenu.Click += new System.EventHandler(this.StopTrainingMenu_Click);
             // 
             // ExitAppMenu
             // 
             this.ExitAppMenu.Name = "ExitAppMenu";
-            this.ExitAppMenu.Size = new System.Drawing.Size(180, 22);
+            this.ExitAppMenu.Size = new System.Drawing.Size(150, 22);
             this.ExitAppMenu.Text = "アプリを閉じる";
             this.ExitAppMenu.Click += new System.EventHandler(this.ExitAppMenu_Click);
             // 
@@ -104,7 +104,7 @@
             // TrainingSettingMenu
             // 
             this.TrainingSettingMenu.Name = "TrainingSettingMenu";
-            this.TrainingSettingMenu.Size = new System.Drawing.Size(180, 22);
+            this.TrainingSettingMenu.Size = new System.Drawing.Size(150, 22);
             this.TrainingSettingMenu.Text = "トレーニング設定";
             this.TrainingSettingMenu.Click += new System.EventHandler(this.TrainingSettingMenu_Click);
             // 
@@ -113,7 +113,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 517);
-            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.TrainingPictureBox);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -124,7 +124,7 @@
             this.Load += new System.EventHandler(this.FormLoad);
             this.ResizeEnd += new System.EventHandler(this.FormResizeEnd);
             this.Resize += new System.EventHandler(this.FormResized);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TrainingPictureBox)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -134,7 +134,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.PictureBox TrainingPictureBox;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem medusaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem StartTrainingMenu;
