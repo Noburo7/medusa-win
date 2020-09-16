@@ -121,6 +121,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MedusaMain";
             this.Text = "動体視力トレーニング Medusa";
+            this.Load += new System.EventHandler(this.FormLoad);
             this.ResizeEnd += new System.EventHandler(this.FormResizeEnd);
             this.Resize += new System.EventHandler(this.FormResized);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();

@@ -12,6 +12,8 @@ namespace medusa
         public SettingForm()
         {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
+
             BackgroundColorCanvas = new Bitmap(BackgroundColorPictureBox.Width, BackgroundColorPictureBox.Height);
             MarkerColorCanvas = new Bitmap(MarkerColorPictureBox.Width, MarkerColorPictureBox.Height);
             LoadBackgroundColor();

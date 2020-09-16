@@ -19,6 +19,8 @@ namespace medusa
         public MedusaMain()
         {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterScreen;
+
             _currentWindowState = WindowState;
             Canvas = new Bitmap(pictureBox.Width, pictureBox.Height);
             DrawBackGround();
@@ -161,6 +163,15 @@ namespace medusa
             {
                 return 300;
             }
+        }
+
+        private void FormLoad(object sender, EventArgs e)
+        {
+            //No Meaning! but show splash form.
+            var splash = new SplashForm();
+            splash.Show();
+            Thread.Sleep(2000);
+            splash.Close();
         }
     }
 }
