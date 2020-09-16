@@ -75,21 +75,21 @@
             // StartTrainingMenu
             // 
             this.StartTrainingMenu.Name = "StartTrainingMenu";
-            this.StartTrainingMenu.Size = new System.Drawing.Size(150, 22);
+            this.StartTrainingMenu.Size = new System.Drawing.Size(180, 22);
             this.StartTrainingMenu.Text = "トレーニング開始";
             this.StartTrainingMenu.Click += new System.EventHandler(this.StartTrainingMenu_Click);
             // 
             // StopTrainingMenu
             // 
             this.StopTrainingMenu.Name = "StopTrainingMenu";
-            this.StopTrainingMenu.Size = new System.Drawing.Size(150, 22);
+            this.StopTrainingMenu.Size = new System.Drawing.Size(180, 22);
             this.StopTrainingMenu.Text = "トレーニング終了";
             this.StopTrainingMenu.Click += new System.EventHandler(this.StopTrainingMenu_Click);
             // 
             // ExitAppMenu
             // 
             this.ExitAppMenu.Name = "ExitAppMenu";
-            this.ExitAppMenu.Size = new System.Drawing.Size(150, 22);
+            this.ExitAppMenu.Size = new System.Drawing.Size(180, 22);
             this.ExitAppMenu.Text = "アプリを閉じる";
             this.ExitAppMenu.Click += new System.EventHandler(this.ExitAppMenu_Click);
             // 
@@ -104,8 +104,9 @@
             // TrainingSettingMenu
             // 
             this.TrainingSettingMenu.Name = "TrainingSettingMenu";
-            this.TrainingSettingMenu.Size = new System.Drawing.Size(150, 22);
+            this.TrainingSettingMenu.Size = new System.Drawing.Size(180, 22);
             this.TrainingSettingMenu.Text = "トレーニング設定";
+            this.TrainingSettingMenu.Click += new System.EventHandler(this.TrainingSettingMenu_Click);
             // 
             // MedusaMain
             // 

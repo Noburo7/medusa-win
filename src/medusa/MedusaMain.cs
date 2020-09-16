@@ -11,8 +11,6 @@ namespace medusa
         private Bitmap Canvas { get; set; }
         private int MarkPosX { get; set; }
         private int MarkPosY { get; set; }
-        private int MarkWidth { get; } = 50;
-        private int MarkHeight { get; } = 50;
         private bool IsStop { get; set; } = false;
 
         private readonly object _locked = new object();
@@ -66,7 +64,7 @@ namespace medusa
 
                     lock (_locked)
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(GetMarkerSpeedByMilliSecond());
                     }
 
                     if (IsStop)
@@ -81,23 +79,33 @@ namespace medusa
         {
             using (Graphics g = Graphics.FromImage(Canvas))
             {
-                g.FillRectangle(Brushes.Black, 0, 0, pictureBox.Width, pictureBox.Height);
+                using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.BackgroundColorR,
+                    Properties.Settings.Default.BackgroundColorG, Properties.Settings.Default.BackgroundColorB)))
+                {
+                    g.FillRectangle(brush, 0, 0, pictureBox.Width, pictureBox.Height);
+                }
             }
             pictureBox.Image = Canvas;
         }
 
         private void DecideMarkPos()
         {
+            var markerSize = GetMarkerSize();
             Random r = new Random();
-            MarkPosX = r.Next(0, Canvas.Width - MarkWidth);
-            MarkPosY = r.Next(0, Canvas.Height - MarkHeight);
+            MarkPosX = r.Next(0, Canvas.Width - markerSize);
+            MarkPosY = r.Next(0, Canvas.Height - markerSize);
         }
 
         private void DrawMark()
         {            
             using (Graphics g = Graphics.FromImage(Canvas))
             {
-                g.FillEllipse(Brushes.Yellow, MarkPosX, MarkPosY, MarkWidth, MarkHeight);
+                var markerSize = GetMarkerSize();
+                using (var brush = new SolidBrush(Color.FromArgb(Properties.Settings.Default.MarkerColorR,
+                    Properties.Settings.Default.MarkerColorG, Properties.Settings.Default.MarkerColorB)))
+                {
+                    g.FillEllipse(brush, MarkPosX, MarkPosY, markerSize, markerSize);
+                }
             }
             pictureBox.Image = Canvas;
         }
@@ -126,6 +134,32 @@ namespace medusa
                 {
                     DrawBackGround();
                 }
+            }
+        }
+
+        private void TrainingSettingMenu_Click(object sender, EventArgs e)
+        {
+            new SettingForm().Show();
+        }
+
+        private int GetMarkerSize()
+        {
+            return (Properties.Settings.Default.MarkerSize + 1) * 50;
+        }
+
+        private int GetMarkerSpeedByMilliSecond()
+        {
+            if (Properties.Settings.Default.MarkerSpeed == 0)
+            {
+                return 1000;
+            }
+            else if (Properties.Settings.Default.MarkerSpeed == 1)
+            {
+                return 500;
+            }
+            else
+            {
+                return 300;
             }
         }
     }

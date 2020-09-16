@@ -6,3 +6,5 @@
 /src/.vs/medusa/v16/Server/sqlite3
 /src/.vs/medusa/v16
 /src/medusa/bin/Debug
+/src/medusa/bin/Release
+/src/medusa/obj/Release
